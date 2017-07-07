@@ -13,6 +13,7 @@ Shaders ported from RetroArch to ReShade.
 - CRT-Lottes by Timothy Lottes
 - GTUv50 by Aliaspider
 - NTSC by Themaister (I think that's the one used in RetroArch)
+- NTSC by MAME Team
 - PAL-Singlepass (by svofski/HunterK.)
 - R57-PAL (By r57shell/feos/HardWareMan)
 
