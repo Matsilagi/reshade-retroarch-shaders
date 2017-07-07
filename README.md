@@ -15,7 +15,7 @@ NTSC by Themaister (I think that's the one used in RetroArch)
 PAL-Singlepass (by svofski/HunterK.)
 R57-PAL (By r57shell/feos/HardWareMan)
 
-#Other Credits
+# Other Credits
 Me: Porting a lot of those
 luluco250: Porting Artifact Colors and PAL shaders (also figuring out the freaking matrices)
 MartyMcFly: Tutoring, help.
