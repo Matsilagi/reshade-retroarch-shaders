@@ -11,7 +11,9 @@ Shaders ported from RetroArch to ReShade.
 - CRT-Geom by cgwg, Themaister and DOLLS!
 - CRT-Hyllian by Hylilan
 - CRT-Lottes by Timothy Lottes
+- EGA Filter by VileR (Ported from DOSBox)
 - GTUv50 by Aliaspider
+- Monitor Colors by ??? (No credits listed on the shaders, ported from DOSBox)
 - NTSC by Themaister (I think that's the one used in RetroArch)
 - NTSC by MAME Team
 - PAL-Singlepass (by svofski/HunterK.)
