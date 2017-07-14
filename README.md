@@ -9,7 +9,7 @@ Shaders ported from RetroArch to ReShade.
 - CRT-cgwg by cgwg
 - CRT-Easymode by Easymode
 - CRT-Geom by cgwg, Themaister and DOLLS!
-- CRT-Hyllian by Hylilan
+- CRT-Hyllian by Hyllian
 - CRT-Lottes by Timothy Lottes
 - EGA Filter by VileR (Ported from DOSBox)
 - GTUv50 by Aliaspider
