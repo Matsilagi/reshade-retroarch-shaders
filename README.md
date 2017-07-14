@@ -18,6 +18,7 @@ Shaders ported from RetroArch to ReShade.
 - NTSC by MAME Team
 - PAL-Singlepass (by svofski/HunterK.)
 - R57-PAL (By r57shell/feos/HardWareMan)
+- Scanlines Sine Absolute Value (by RiskyJumps)
 
 # Other Credits
 - Me: Porting a lot of those
