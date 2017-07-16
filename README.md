@@ -6,11 +6,13 @@ Shaders ported from RetroArch to ReShade.
 - 3DFX by leileilol
 - ArtifactColors by flyguy/HunterK.
 - CRT-Aperture by Easymode
+- CRT-Caligari by Caligari
 - CRT-cgwg by cgwg
 - CRT-Easymode by Easymode
 - CRT-Geom by cgwg, Themaister and DOLLS!
 - CRT-Hyllian by Hyllian
 - CRT-Lottes by Timothy Lottes
+- CRT-nes-mini by ???
 - EGA Filter by VileR (Ported from DOSBox)
 - GTUv50 by Aliaspider
 - Monitor Colors by ??? (No credits listed on the shaders, ported from DOSBox)
