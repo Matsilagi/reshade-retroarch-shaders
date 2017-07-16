@@ -2,7 +2,7 @@
     Scanlines Sine Absolute Value
     An ultra light scanline shader
     by RiskyJumps
-	license: public domain
+    license: public domain
 */
 
 #include "ReShade.fxh"
@@ -70,7 +70,7 @@ float4 PS_ScanlinesAbs(float4 pos : SV_POSITION, float2 tex : TEXCOORD0, float a
 }
 
 technique ScanlinesAbs {
-	pass {
+	pass ScanlinesAbsolute{
 		VertexShader = PostProcessVS;
 		PixelShader = PS_ScanlinesAbs;
 	}
