@@ -153,10 +153,7 @@ uniform float BRIGHTNESS <
 #define texture_size float2(resX, resY)
 #define video_size float2(video_sizeX, video_sizeY)
 
-float mod(float x, float y)
-{
-  return x - y * floor(x/y);
-}
+#define mod(x,y) (x-y*floor(x/y))
 
 float3 blur(float3x3 m, float dist, float rad)
 {

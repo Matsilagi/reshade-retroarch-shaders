@@ -144,10 +144,7 @@ static const float FIR20 = 0.003107906;
 /* We save the reciprocal of this only to optimize it */
 static const float counts_per_scanline_reciprocal = 1.0 / (FSC/FLINE);
 
-float mod(float x, float y)
-{
-  return x - y * floor(x/y);
-}
+#define mod(x,y) (x-y*floor(x/y))
 
 float fmod(float a, float b)
 {

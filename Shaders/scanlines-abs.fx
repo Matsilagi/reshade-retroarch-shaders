@@ -2,7 +2,7 @@
     Scanlines Sine Absolute Value
     An ultra light scanline shader
     by RiskyJumps
-    license: public domain
+	license: public domain
 */
 
 #include "ReShade.fxh"

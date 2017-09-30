@@ -195,10 +195,7 @@ uniform int DILATION <
 	ui_label = "Dilation [CRT-Easymode]";
 > = 1.0;
 
-float mod(float x, float y)
-{
-  return x - y * floor(x/y);
-}
+#define mod(x,y) (x-y*floor(x/y))
 
 #define FIX(c) max(abs(c), 1e-5)
 #define PI 3.141592653589

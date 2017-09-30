@@ -7,7 +7,7 @@ uniform float texture_sizeY <
 	ui_label = "Scanlines Height [NES-MINI CRT]";
 > = 240.0;
 
-float mod(float x, float y) { return x - y * floor(x/y); }
+#define mod(x,y) (x-y*floor(x/y))
 
 float4 PS_CRT_NESMINI(float4 vpos : SV_POSITION, float2 texcoord : TEXCOORD0) : SV_Target
 {

@@ -23,10 +23,7 @@ uniform float texture_sizeY <
  
 static const float pi = 3.142;
 
-float mod(float x, float y)
-{
-  return x - y * floor(x/y);
-}
+#define mod(x,y) (x-y*floor(x/y))
  
 float3 monitor(sampler text, float2 p)
 {

@@ -47,10 +47,7 @@ uniform float GAMMA_LEVEL <
 	#define	FILTCAPG (FILTCAP/2)
 #endif
 
-float mod2(float x, float y)
-{
-	return x - y * floor (x/y);
-}
+#define mod2(x,y) (x-y*floor(x/y))
 
 float fmod(float a, float b)
 {
