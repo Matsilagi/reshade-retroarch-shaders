@@ -152,8 +152,7 @@ uniform float BRIGHTNESS <
 #define TEX2D(c) pow(tex2D(tex, c).rgb, GAMMA_INPUT)
 #define texture_size float2(resX, resY)
 #define video_size float2(video_sizeX, video_sizeY)
-
-#define mod(x,y) (x-y*floor(x/y))
+#define mod(x,y) (x - y * trunc(x/y))
 
 float3 blur(float3x3 m, float dist, float rad)
 {
@@ -217,7 +216,7 @@ float3 get_scanline_weight(float x, float3 col)
 
 float3 get_mask_weight(float x)
 {
-    float i = mod(floor(x * texture_size.x * ReShade::ScreenSize / (video_size.x * MASK_SIZE)), MASK_COLORS);
+    float i = mod(floor(x * ReShade::ScreenSize.x * texture_size.x / (video_size.x * MASK_SIZE)), MASK_COLORS);
 
     if (i == 0.0) return lerp(float3(1.0, 0.0, 1.0), float3(1.0, 0.0, 0.0), MASK_COLORS - 2.0);
     else if (i == 1.0) return float3(0.0, 1.0, 0.0);
@@ -231,7 +230,7 @@ float4 PS_CRTAperture(float4 vpos : SV_Position, float2 co : TexCoord) : SV_Targ
     float3 col_sharp = filter_lanczos(ReShade::BackBuffer, co, texture_size, SHARPNESS_EDGES).rgb;
     float3 col = sqrt(col_sharp * col_soft);
 
-    col *= get_scanline_weight(frac(co.y * resY), col_soft);
+    col *= get_scanline_weight(frac(co.y * texture_size.y), col_soft);
     col_glow = saturate(col_glow - col);
     col += col_glow * col_glow * GLOW_HALATION;
     col = lerp(col, col * get_mask_weight(co.x) * MASK_COLORS, MASK_STRENGTH);
