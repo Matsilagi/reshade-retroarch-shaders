@@ -95,6 +95,8 @@ texture target0_gtu
 };
 sampler s0 { Texture = target0_gtu; };
 
+#define _tex2D(sp, uv) tex2Dlod(sp, float4(uv, 0.0, 0.0))
+
 #define texture_size float2(texture_sizeX, texture_sizeY)
 #define video_size float2(video_sizeX, video_sizeY)
 
@@ -108,7 +110,7 @@ sampler s0 { Texture = target0_gtu; };
 #define e(x,b) (pi*b*min(max(a(x)-0.5,-1.0/b),1.0/b))
 #define STU(x,b) ((d(x,b)+sin(d(x,b))-e(x,b)-sin(e(x,b)))/(2.0*pi))
 #define X(i) (offset-(i))
-#define GETC (tex2D(s0, float2(tex.x - X/texture_size.x,tex.y)).rgb)
+#define GETC (_tex2D(s0, float2(tex.x - X/texture_size.x,tex.y)).rgb)
 
 #define VAL_composite float3((c.x*STU(X,(signalResolution/video_size.x))),(c.y*STU(X,(signalResolutionI/video_size.x))),(c.z*STU(X,(signalResolutionQ/video_size.x))))
 #define VAL (c*STU(X,(signalResolution/video_size.x)))
@@ -121,31 +123,31 @@ sampler s0 { Texture = target0_gtu; };
 
 float normalGaussIntegral(float x)
 {
-   float a1 = 0.4361836;
-   float a2 = -0.1201676;
-   float a3 = 0.9372980;
-   float p = 0.3326700;
-   float t = 1.0 / (1.0 + p*abs(x));
-   return (0.5-normalGauss(x) * (t*(a1 + t*(a2 + a3*t))))*sign(x);
+	float a1 = 0.4361836;
+	float a2 = -0.1201676;
+	float a3 = 0.9372980;
+	float p = 0.3326700;
+	float t = 1.0 / (1.0 + p*abs(x));
+	return (0.5-normalGauss(x) * (t*(a1 + t*(a2 + a3*t))))*sign(x);
 }
 
 float3 scanlines( float x , float3 c){
-   float temp=sqrt(2*pi)*(tvVerticalResolution/texture_sizeY);
+	float temp=sqrt(2*pi)*(tvVerticalResolution/texture_sizeY);
 
-   float rrr=0.5*(texture_sizeY/ReShade::ScreenSize.y);
-   float x1=(x+rrr)*temp;
-   float x2=(x-rrr)*temp;
-   c.r=(c.r*(normalGaussIntegral(x1)-normalGaussIntegral(x2)));
-   c.g=(c.g*(normalGaussIntegral(x1)-normalGaussIntegral(x2)));
-   c.b=(c.b*(normalGaussIntegral(x1)-normalGaussIntegral(x2)));
-   c*=(ReShade::ScreenSize.y/texture_sizeY);
-   return c;
+	float rrr=0.5*(texture_sizeY/ReShade::ScreenSize.y);
+	float x1=(x+rrr)*temp;
+	float x2=(x-rrr)*temp;
+	c.r=(c.r*(normalGaussIntegral(x1)-normalGaussIntegral(x2)));
+	c.g=(c.g*(normalGaussIntegral(x1)-normalGaussIntegral(x2)));
+	c.b=(c.b*(normalGaussIntegral(x1)-normalGaussIntegral(x2)));
+	c*=(ReShade::ScreenSize.y/texture_sizeY);
+	return c;
 }
 
 #define Y(j) (offset.y-(j))
 
 #define SOURCE(j) float2(tex.x,tex.y - Y(j)/texture_size.y)
-#define C(j) (tex2D(ReShade::BackBuffer, SOURCE(j)).xyz)
+#define C(j) (_tex2D(ReShade::BackBuffer, SOURCE(j)).xyz)
 
 #define VAL_1(j) (C(j)*STU(Y(j),(tvVerticalResolution/video_size.y)))
 
@@ -153,68 +155,73 @@ float3 scanlines( float x , float3 c){
 
 float4 PS_GTU1(float4 vpos : SV_Position, float2 tex : TexCoord) : SV_Target
 {
-   float4 c=tex2D(ReShade::BackBuffer, tex);
-   if(compositeConnection){
-      c.rgb=mul(RGB_to_YIQ,c.rgb);
+	float4 c=tex2D(ReShade::BackBuffer, tex);
+	if(compositeConnection){
+		c.rgb=mul(RGB_to_YIQ,c.rgb);
 	}
-   return c;
+	return c;
 }
 
 float4 PS_GTU2(float4 vpos : SV_Position, float2 tex : TexCoord) : SV_Target
 {
-// return tex2D(s0, tex);
-   float offset   = frac((tex.x * texture_size.x) - 0.5);
-   float3   tempColor = float3(0.0,0.0,0.0);
-   float    X;
-   float3   c;
-   float range;
-   if (compositeConnection){
-      range=ceil(0.5+video_size.x/min(min(signalResolution,signalResolutionI),signalResolutionQ));
-   } else {
-      range=ceil(0.5+video_size.x/signalResolution);
+	// return tex2D(s0, tex);
+	float offset   = frac((tex.x * texture_size.x) - 0.5);
+	float3   tempColor = float3(0.0,0.0,0.0);
+	float    X;
+	float3   c;
+	float range;
+	if (compositeConnection){
+		range=ceil(0.5+video_size.x/min(min(signalResolution,signalResolutionI),signalResolutionQ));
+	} else {
+		range=ceil(0.5+video_size.x/signalResolution);
 	}
 
-   float i;
-   if(compositeConnection){
-      for (i=-range;i<range+2.0;i++){
-         PROCESS_composite(i)
-      }
-   } else {
-      for (i=-range;i<range+2.0;i++){
-         PROCESS(i)
-      }
-   }
-   if(compositeConnection) {
-      tempColor=clamp(mul(YIQ_to_RGB,tempColor),0.0,1.0);
-   } else {
-      tempColor=clamp(tempColor,0.0,1.0);
+	float i;
+	if(compositeConnection){
+		//[loop]
+		for (i=-range;i<range+2.0;i++){
+			PROCESS_composite(i)
+		}
+	} else {
+		//[loop]
+		for (i=-range;i<range+2.0;i++){
+			PROCESS(i)
+		}
+	}
+	if(compositeConnection) {
+		tempColor=clamp(mul(YIQ_to_RGB,tempColor),0.0,1.0);
+	} else {
+		tempColor=clamp(tempColor,0.0,1.0);
 	}
 
-   // tempColor=clamp(tempColor,0.0,1.0);
-   return float4(tempColor,1.0);
+	// tempColor=clamp(tempColor,0.0,1.0);
+	return float4(tempColor,1.0);
 }
 
 float4 PS_GTU3(float4 vpos : SV_Position, float2 tex : TexCoord) : SV_Target
 {
-   float2   offset   = frac((tex.xy * texture_size) - 0.5);
-   float3   tempColor = float3(0.0,0.0,0.0);
+	float2   offset   = frac((tex.xy * texture_size) - 0.5);
+	float3   tempColor = float3(0.0,0.0,0.0);
 
-   float range=ceil(0.5+video_size.y/tvVerticalResolution);
+	float range=ceil(0.5+video_size.y/tvVerticalResolution);
 
-   float i;
+	float i;
 
-   if (noScanlines){
-      for (i=-range;i<range+2.0;i++){
-         tempColor+=VAL_1(i);
-      }} else {
-       for (i=-range;i<range+2.0;i++){
-         tempColor+=VAL_scanlines(i);
-      }
+	if (noScanlines){
+		//[loop]
+		for (i=-range;i<range+2.0;i++){
+			tempColor+=VAL_1(i);
+		}
+	} else {
+		//[loop]
+		for (i=-range;i<range+2.0;i++){
+			tempColor+=VAL_scanlines(i);
+		}
 	}
 
-   tempColor-=float3(blackLevel,blackLevel,blackLevel);
-   tempColor*=(contrast/float3(1.0-blackLevel,1.0-blackLevel,1.0-blackLevel));
-   return float4(tempColor, 1.0);
+	tempColor-=float3(blackLevel,blackLevel,blackLevel);
+	tempColor*=(contrast/float3(1.0-blackLevel,1.0-blackLevel,1.0-blackLevel));
+	return float4(tempColor, 1.0);
 }
 
 technique GTUV50 {
